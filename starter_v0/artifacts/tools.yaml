@@ -270,3 +270,13 @@ tools:
           default: false
           description: "Must be true only after explicit confirmation of this exact current payload."
       required: [summary, priority, confirmed]
+
+  - name: ticket_status_lookup
+    description: "Lookup ticket status and details."
+    parameters:
+      type: object
+      properties:
+        ticket_id:
+          type: string
+          description: "The ticket ID to lookup, e.g., TKT-101"
+      required: [ticket_id]
