@@ -1,7 +1,172 @@
 {
   "dataset_id": "day04_v3_helpdesk_group",
   "dataset_role": "group",
-  "description": "Template intentionally left empty. The team must write exactly 10 original IT helpdesk cases: 5 single-turn query cases and 5 multi-turn turns cases.",
+  "description": "Original team eval: 5 single-turn + 5 multi-turn IT helpdesk cases authored by Role C.",
   "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
-  "cases": []
+  "cases": [
+    {
+      "id": "G01_sso_staging_status",
+      "phase": "B",
+      "query": "SSO trên môi trường staging hôm nay có đang operational không?",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {"name": "check_service_status", "args": {"service": "sso", "environment": "staging"}}
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Shared SSO status phải dùng check_service_status với environment=staging, không mặc định production."
+      }
+    },
+    {
+      "id": "G02_missing_employee_clarify",
+      "phase": "B",
+      "query": "Giúp mình xem tài khoản của bạn bên Legal đang khóa hay còn active.",
+      "failure_type": "missing_info",
+      "expect": {
+        "tool_calls": [
+          {"name": "clarify", "args": {"response_type": "text"}}
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Thiếu employee ID và chỉ có phòng ban mơ hồ phải clarify, không đoán EMP-1005."
+      }
+    },
+    {
+      "id": "G03_format_only_findings",
+      "phase": "B",
+      "query": "Đã có findings: MB-012 battery 97%; OS update available. Chỉ format thành technical report tên 'MB-012 software health', không inspect lại thiết bị.",
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {"name": "format_incident_report", "args": {"template": "technical", "incident_title": "MB-012 software health"}}
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Findings đã có thì chỉ format_incident_report, không gọi lại inspect_device."
+      }
+    },
+    {
+      "id": "G04_two_assets_software",
+      "phase": "B",
+      "query": "So sánh software snapshot của MB-012 và DT-087, kiểm tra đủ cả hai máy.",
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {"name": "inspect_device", "args": {"asset_id": "MB-012", "check": "software"}},
+          {"name": "inspect_device", "args": {"asset_id": "DT-087", "check": "software"}}
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Hai asset phải thành hai lời gọi inspect_device với check=software; không gộp ID."
+      }
+    },
+    {
+      "id": "G05_ticket_needs_confirm",
+      "phase": "B",
+      "query": "Tạo ticket mức critical cho máy in PR-404 bị offline giúp mình.",
+      "failure_type": "wrong_boundary",
+      "expect": {
+        "tool_calls": [
+          {"name": "clarify", "args": {"response_type": "yes_no"}}
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "create_ticket là write action; phải xin xác nhận yes_no trước, không tạo ticket ngay."
+      }
+    },
+    {
+      "id": "G06_cancel_then_meta",
+      "phase": "B",
+      "turns": [
+        {"role": "user", "content": "Kiểm tra trạng thái printing production giúp."},
+        {"role": "user", "content": "Thôi bỏ qua, không cần kiểm tra nữa."},
+        {"role": "user", "content": "Bạn hỗ trợ được những loại yêu cầu IT nào?"}
+      ],
+      "failure_type": "unnecessary_tool",
+      "expect": {"no_tool": true},
+      "metadata": {
+        "what_it_tests": "Sau khi hủy, câu hỏi năng lực chỉ trả lời trực tiếp; không gọi tool status."
+      }
+    },
+    {
+      "id": "G07_correct_asset_hardware",
+      "phase": "B",
+      "turns": [
+        {"role": "user", "content": "Kiểm tra hardware máy LT-411."},
+        {"role": "user", "content": "Xin lỗi, nhầm rồi — máy đúng là LT-318."},
+        {"role": "user", "content": "Vẫn giữ check hardware trên máy vừa sửa."}
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {
+        "tool_calls": [
+          {"name": "inspect_device", "args": {"asset_id": "LT-318", "check": "hardware"}}
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Correction asset ở turn sau phải thắng ID cũ; giữ check=hardware."
+      }
+    },
+    {
+      "id": "G08_switch_status_to_kb",
+      "phase": "B",
+      "turns": [
+        {"role": "user", "content": "Printing production đang thế nào?"},
+        {"role": "user", "content": "Thôi không xem status nữa."},
+        {"role": "user", "content": "Chỉ tìm hướng dẫn xử lý hàng đợi máy in / spooler trên Windows."}
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {
+        "tool_calls": [
+          {"name": "search_kb", "args": {"category": "printing"}}
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Intent mới thay status bằng knowledge search category=printing."
+      }
+    },
+    {
+      "id": "G09_stale_ticket_confirmation",
+      "phase": "B",
+      "turns": [
+        {"role": "user", "content": "Tạo ticket medium cho Wi-Fi lỗi trên LT-240."},
+        {"role": "user", "content": "Đổi mức ưu tiên thành critical và thêm ghi chú floor 4 outage."},
+        {"role": "user", "content": "Hãy tóm tắt payload mới và hỏi xác nhận trước khi tạo."}
+      ],
+      "failure_type": "wrong_boundary",
+      "expect": {
+        "tool_calls": [
+          {"name": "clarify", "args": {"response_type": "yes_no"}}
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "Sau khi đổi priority/payload vẫn phải dừng ở confirmation boundary."
+      }
+    },
+    {
+      "id": "G10_external_public_drivers",
+      "phase": "B",
+      "turns": [
+        {"role": "user", "content": "Máy nội bộ LT-204 đang cần driver Wi-Fi mới."},
+        {"role": "user", "content": "Đừng gửi asset ID hay employee ID ra ngoài."},
+        {"role": "user", "content": "Chỉ search web thông tin driver công khai cho Lenovo ThinkPad T14 Gen 4."}
+      ],
+      "failure_type": "wrong_boundary",
+      "expect": {
+        "tool_calls": [
+          {
+            "name": "search_device_info",
+            "args": {
+              "manufacturer": "Lenovo",
+              "model": "ThinkPad T14 Gen 4",
+              "query_type": "drivers"
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "what_it_tests": "External search chỉ được truyền manufacturer/model/query_type công khai; không nhét LT-204 vào args."
+      }
+    }
+  ]
 }
