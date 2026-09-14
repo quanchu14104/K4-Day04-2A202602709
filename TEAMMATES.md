@@ -1,11 +1,11 @@
-# Danh Sách Thành Viên & Phân Chia Vai Trò
+# Danh Sách Thành Viên & Phân Chia Vai Trò (Nhóm 5 Thành Viên)
 
-> Xem mô tả chi tiết nhiệm vụ và trách nhiệm của từng vai trò tại [ROLE.md](ROLE.md).
+> Chi tiết nhiệm vụ, trách nhiệm và tiêu chí nghiệm thu của từng vai trò xem tại [ROLE.md](ROLE.md).
 
-| STT | Họ và Tên | MSSV | GitHub Username | Vai trò đảm nhiệm |
+| Ký hiệu | Họ và Tên | MSSV | GitHub Username | Vai trò đảm nhiệm theo slide |
 |:---:|---|---|---|---|
-| 1 | Chu Minh Quân | 2A202602709 | quanchu14104 | Role 1: Team Lead & System Prompt Engineer |
-| 2 | [Họ và tên thành viên 2] | [MSSV] | [github_username] | Role 2: Tool Interface & Registry Engineer |
-| 3 | [Họ và tên thành viên 3] | [MSSV] | [github_username] | Role 3: QA, Benchmark & Dataset Designer |
-| 4 | [Họ và tên thành viên 4] | [MSSV] | [github_username] | Role 4: Security & Red-Teaming Engineer |
-| 5 | [Họ và tên thành viên 5] | [MSSV] | [github_username] | Role 5: UI Developer & Demo Specialist |
+| **A** | Chu Minh Quân | 2A202602709 | quanchu14104 | **Prompt Architect / Lead**: Quản lý `system_prompt.md`, format JSON, context carry-over & version hash |
+| **B** | [Họ và tên thành viên B] | [MSSV] | [github_username] | **Tool & Schema Engineer**: Quản lý `tools.yaml`, chuẩn hóa enums/arguments, đồng bộ tool name, Tavily API |
+| **C** | [Họ và tên thành viên C] | [MSSV] | [github_username] | **Eval Author (G01 $\rightarrow$ G10)**: Tác giả 10 cases `eval_group.json`, benchmark & failure analysis |
+| **D** | [Họ và tên thành viên D] | [MSSV] | [github_username] | **UI & Report Lead**: Dựng Live Chat Streamlit, test kịch bản demo, tổng hợp `REPORT.md` |
+| **E** | [Họ và tên thành viên E] | [MSSV] | [github_username] | **Security & Bonus Tool**: Kiểm tra 12 adversarial attacks, rà soát data leakage (Tavily), vé rác & code 1 Bonus Tool |
