@@ -24,9 +24,9 @@ cd starter_v0
 
 Gắn path file `runs/*.json` vào đây:
 
-- Adversarial v0 (blocked, provider_error=12): `runs/v0_B_adversarial_openrouter_20260914T184023357070.json`
-- Group v0 (blocked, provider_error=10): `runs/v0_B_group_openrouter_20260914T184038892989.json`
-- Final v3 sau A/B + có API key: _PENDING_ — chạy `.\scripts\role_c_run_evals.ps1 -Version v3`
+- Adversarial v0 Gemini (measured 7/12, 4 wrong_boundary, 5×429): `runs/v0_B_adversarial_gemini_20260914T185433933238.json`
+- Feedback đẩy Role A: `artifacts/ROLE_C_FEEDBACK_AB.md`
+- Final v3 sau A/B: _PENDING_
 
 ## Đoạn gợi ý paste vào REPORT.md (safety review)
 
