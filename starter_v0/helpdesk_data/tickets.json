@@ -1,0 +1,26 @@
+[
+  {
+    "ticket_id": "TKT-101",
+    "status": "In Progress",
+    "summary": "Cannot connect to VPN",
+    "priority": "high",
+    "assignee": "EMP-1002",
+    "created_at": "2026-09-10T08:30:00Z"
+  },
+  {
+    "ticket_id": "TKT-102",
+    "status": "Resolved",
+    "summary": "Request new monitor",
+    "priority": "low",
+    "assignee": "EMP-1005",
+    "created_at": "2026-09-12T14:15:00Z"
+  },
+  {
+    "ticket_id": "TKT-103",
+    "status": "Open",
+    "summary": "Password reset for SSO",
+    "priority": "medium",
+    "assignee": null,
+    "created_at": "2026-09-14T09:00:00Z"
+  }
+]
