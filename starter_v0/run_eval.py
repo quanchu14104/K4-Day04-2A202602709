@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
+import time
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -286,7 +288,11 @@ def main() -> None:
     openai_tools = to_openai_tools(tool_declarations)
 
     results: list[dict[str, Any]] = []
-    for case in cases:
+    case_delay_sec = float(os.getenv("DAY04_CASE_DELAY_SEC", "0") or 0)
+    for index, case in enumerate(cases):
+        if index > 0 and case_delay_sec > 0:
+            print(f"Throttling {case_delay_sec:.0f}s before next case...", flush=True)
+            time.sleep(case_delay_sec)
         print(f"Running {case['id']}...", flush=True)
         agent = HelpdeskAgent(provider, system_prompt=system_prompt, tools=openai_tools, model=args.model)
         try:
