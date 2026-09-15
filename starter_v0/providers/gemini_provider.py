@@ -73,10 +73,10 @@ class GeminiProvider:
         self,
         *,
         api_key_env: str = "GEMINI_API_KEY",
-        default_model: str = "gemini-3.5-flash",
+        default_model: str | None = None,
     ) -> None:
         self.api_key_env = api_key_env
-        self.default_model = default_model
+        self.default_model = default_model or os.getenv("GEMINI_MODEL", "gemini-3.6-flash")
 
     def complete(
         self,
@@ -108,7 +108,7 @@ class GeminiProvider:
         import time
         client = genai.Client(api_key=api_key)
         resp = None
-        for attempt in range(6):
+        for attempt in range(8):
             try:
                 resp = client.models.generate_content(
                     model=model or self.default_model,
@@ -118,8 +118,16 @@ class GeminiProvider:
                 break
             except Exception as exc:
                 err_str = str(exc)
-                if ("429" in err_str or "RESOURCE_EXHAUSTED" in err_str or "503" in err_str or "UNAVAILABLE" in err_str) and attempt < 5:
-                    wait_sec = 6 * (attempt + 1)
+                if ("429" in err_str or "RESOURCE_EXHAUSTED" in err_str or "503" in err_str or "UNAVAILABLE" in err_str) and attempt < 7:
+                    import re
+                    match = re.search(r"retry in (\d+(?:\.\d+)?)s", err_str) or re.search(r"'retryDelay':\s*'(\d+)s'", err_str)
+                    if match:
+                        wait_sec = int(float(match.group(1))) + 3
+                    elif "429" in err_str or "RESOURCE_EXHAUSTED" in err_str:
+                        wait_sec = 45 + attempt * 5
+                    else:
+                        wait_sec = 5 * (attempt + 1)
+                    print(f"[Gemini 429/503 retry]: Tam dung {wait_sec}s truoc attempt {attempt + 2}/8...")
                     time.sleep(wait_sec)
                     continue
                 raise
